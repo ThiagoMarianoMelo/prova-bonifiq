@@ -16,6 +16,9 @@ namespace ProvaPub.Services
 
         public PaginationModel<Customer> ListCustomers(int page)
         {
+            if (page <= 0)
+                throw new ArgumentException("A pagina escolhida não pode ser menor ou igual a 0");
+
             //Considerando que a primeira pagina seja a 1
             //Busca 11 itens para evitar realizar count no banco causando possível sobrecarga
             var customers = _context.Customers.Skip((page - 1) * 10).Take(11).ToList();
