@@ -18,18 +18,25 @@ namespace ProvaPub.Controllers
 	[Route("[controller]")]
 	public class Parte4Controller :  ControllerBase
 	{
-        TestDbContext _ctx;
-        public Parte4Controller(TestDbContext ctx)
+		private readonly CustomerService _customerService;
+
+        public Parte4Controller(CustomerService customerService)
         {
-            _ctx = ctx;
+            _customerService = customerService;
         }
 
         [HttpGet("CanPurchase")]
 		public async Task<bool> CanPurchase(int customerId, decimal purchaseValue)
 		{
-			CustomerService svc = new CustomerService(_ctx);
-
-			return await svc.CanPurchase(customerId, purchaseValue);
+			return await _customerService.CanPurchase(customerId, purchaseValue, DateTime.UtcNow);
 		}
 	}
 }
+
+//1 - Testes e mudança no método "CanPurchase"
+
+//O método CanPurchase foi refatorado para receber a data como parâmetro, substituindo o uso direto de DateTime.UtcNow, o que permite maior controle nos testes.
+
+//Para utilização dos teste dentro do contexto de uso de dbcontext foi adotado o uso do UseInMemoryDatabase, que permite criar uma instância real do banco em memória, garantindo execução real do EF Core sem a necessidade de banco físico.
+
+//Isso possibilitou a criação de testes confiáveis e eficientes, cobrindo todas as regras de negócio do método, como validação de cliente, limite de compras mensais, valor máximo na primeira compra e horário comercial.
