@@ -22,7 +22,7 @@ namespace ProvaPub.Services
             return CreatePaginatedResponse(customers);
         }
 
-        public async Task<bool> CanPurchase(int customerId, decimal purchaseValue)
+        public async Task<bool> CanPurchase(int customerId, decimal purchaseValue, DateTime dateTime)
         {
             if (customerId <= 0) throw new ArgumentOutOfRangeException(nameof(customerId));
 
@@ -33,7 +33,7 @@ namespace ProvaPub.Services
             if (customer == null) throw new InvalidOperationException($"Customer Id {customerId} does not exists");
 
             //Business Rule: A customer can purchase only a single time per month
-            var baseDate = DateTime.UtcNow.AddMonths(-1);
+            var baseDate = dateTime.AddMonths(-1);
             var ordersInThisMonth = await _context.Orders.CountAsync(s => s.CustomerId == customerId && s.OrderDate >= baseDate);
             if (ordersInThisMonth > 0)
                 return false;
@@ -44,7 +44,7 @@ namespace ProvaPub.Services
                 return false;
 
             //Business Rule: A customer can purchases only during business hours and working days
-            if (DateTime.UtcNow.Hour < 8 || DateTime.UtcNow.Hour > 18 || DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday || DateTime.UtcNow.DayOfWeek == DayOfWeek.Sunday)
+            if (dateTime.Hour < 8 || dateTime.Hour > 18 || dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday)
                 return false;
 
 
