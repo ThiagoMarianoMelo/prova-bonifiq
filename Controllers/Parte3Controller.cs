@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProvaPub.Models;
-using ProvaPub.Repository;
+using ProvaPub.Models.Response;
 using ProvaPub.Services;
+using ProvaPub.Services.PaymentMethods;
 
 namespace ProvaPub.Controllers
 {
@@ -20,16 +19,39 @@ namespace ProvaPub.Controllers
 	[Route("[controller]")]
 	public class Parte3Controller :  ControllerBase
 	{
-		[HttpGet("orders")]
-		public async Task<Order> PlaceOrder(string paymentMethod, decimal paymentValue, int customerId)
+        private readonly OrderService _orderService;
+
+        public Parte3Controller(OrderService orderService)
+        {
+            _orderService = orderService;
+        }
+
+        [HttpGet("orders")]
+		public async Task<OrderCreatedResponse> PlaceOrder(string paymentMethod, decimal paymentValue, int customerId)
 		{
-            var contextOptions = new DbContextOptionsBuilder<TestDbContext>()
-    .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Teste;Trusted_Connection=True;")
-    .Options;
+            var paymentService = PaymentMethodFactory.CreatePaymentService(paymentMethod);
 
-            using var context = new TestDbContext(contextOptions);
-
-            return await new OrderService(context).PayOrder(paymentMethod, paymentValue, customerId);
+            return await _orderService.PayOrder(paymentService, paymentValue, customerId);
 		}
 	}
 }
+
+//1 - Refatoração do fluxo de pagamento
+//Para tornar a arquitetura mais escalável e desacoplada, foram utilizados os seguintes padrões:
+
+//Factory (Criacional):
+//Uma fábrica foi criada para instanciar dinamicamente o serviço de pagamento com base no método informado (ex: "pix", "paypal"). Isso centraliza e isola a lógica de criação dos serviços.
+
+//Strategy (Comportamental):
+//Cada método de pagamento implementa a interface IPaymentService, permitindo que o serviço de pedidos (OrderService) utilize qualquer implementação sem conhecer detalhes do pagamento. Assim, o comportamento (estratégia) pode ser alterado em tempo de execução, sem modificar o código cliente.
+
+//Essa combinação de padrões garante que a arquitetura esteja aberta para extensão e fechada para modificação, atendendo ao princípio OCP.
+
+//2 - Criação de um pedido e ajuste no retorno da data
+
+//2 - Injeção de Dependência
+//O campo OrderDate da entidade Order é salvo sempre em UTC, garantindo consistência no armazenamento
+
+//Para a resposta ao cliente, foi criado um model de resposta (DTO) que transforma o OrderDate para o horário local desejado.
+
+//Caso o retorno deva refletir o fuso do servidor, a conversão pode ser feita com base no horário local da máquina.
