@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProvaPub.Models.Response;
-using ProvaPub.Services;
+using ProvaPub.Services.Interfaces;
 using ProvaPub.Services.PaymentMethods;
 
 namespace ProvaPub.Controllers
@@ -19,9 +19,9 @@ namespace ProvaPub.Controllers
 	[Route("[controller]")]
 	public class Parte3Controller :  ControllerBase
 	{
-        private readonly OrderService _orderService;
+        private readonly IOrderService _orderService;
 
-        public Parte3Controller(OrderService orderService)
+        public Parte3Controller(IOrderService orderService)
         {
             _orderService = orderService;
         }

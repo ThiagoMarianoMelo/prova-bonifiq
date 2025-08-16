@@ -1,11 +1,11 @@
 ﻿using ProvaPub.Models;
 using ProvaPub.Models.Response;
 using ProvaPub.Repository;
-using ProvaPub.Services.PaymentMethods;
+using ProvaPub.Services.Interfaces;
 
 namespace ProvaPub.Services
 {
-	public class OrderService
+	public class OrderService : IOrderService
 	{
         private readonly TestDbContext _context;
 

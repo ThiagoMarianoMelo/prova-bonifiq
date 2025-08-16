@@ -1,4 +1,4 @@
-﻿namespace ProvaPub.Services.PaymentMethods
+﻿namespace ProvaPub.Services.Interfaces
 {
     public interface IPaymentService
     {

@@ -1,9 +1,10 @@
 ﻿using ProvaPub.Models;
 using ProvaPub.Repository;
+using ProvaPub.Services.Interfaces;
 
 namespace ProvaPub.Services
 {
-    public class ProductService : BasePaginateDataService<Product>
+    public class ProductService : BasePaginateDataService<Product>, IProductService
     {
         private readonly TestDbContext _context;
 

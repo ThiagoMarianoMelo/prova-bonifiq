@@ -1,4 +1,6 @@
-﻿namespace ProvaPub.Services.PaymentMethods
+﻿using ProvaPub.Services.Interfaces;
+
+namespace ProvaPub.Services.PaymentMethods
 {
     public static class PaymentMethodFactory
     {

@@ -1,9 +1,10 @@
 ﻿using ProvaPub.Models;
 using ProvaPub.Repository;
+using ProvaPub.Services.Interfaces;
 
 namespace ProvaPub.Services
 {
-	public class RandomService
+	public class RandomService : IRandomService
 	{
 		private readonly int seed;
         private readonly TestDbContext _context;

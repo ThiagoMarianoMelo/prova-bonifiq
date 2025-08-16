@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProvaPub.Models;
-using ProvaPub.Services;
+using ProvaPub.Services.Interfaces;
 
 namespace ProvaPub.Controllers
 {
@@ -9,10 +9,10 @@ namespace ProvaPub.Controllers
 	[Route("[controller]")]
 	public class Parte2Controller :  ControllerBase
 	{
-		private readonly ProductService _productService;
-        private readonly CustomerService _customerService;
+		private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
 
-        public Parte2Controller(ProductService productService, CustomerService customerService)
+        public Parte2Controller(IProductService productService, ICustomerService customerService)
         {
             _productService = productService;
             _customerService = customerService;

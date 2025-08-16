@@ -1,4 +1,6 @@
 ﻿
+using ProvaPub.Services.Interfaces;
+
 namespace ProvaPub.Services.PaymentMethods
 {
     public class CreditCardPaymentService : IPaymentService
